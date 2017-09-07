@@ -14,18 +14,26 @@ jQuery.noConflict();
 (function() {
   'use strict';
   jQuery(function() {
-    var PortletTitle = jQuery("table#porletsLayout div:eq(5) span").text();
-    switch (PortletTitle) {
-      case "个人成绩查询":
-        ChengjiChaxunPage();
-        break;
-      case "教学测评":
-        JiaoxuePingcePage();
-        break;
-      default:
-        break;
+    if (jQuery("input#username").length) {
+      chooseStudent();
+    } else {
+      var PortletTitle = jQuery("table#porletsLayout div:eq(5) span").text();
+      switch (PortletTitle) {
+        case "个人成绩查询":
+          chengjiChaxunPage();
+          break;
+        case "教学测评":
+          jiaoxuePingcePage();
+          break;
+        default:
+          break;
+      }
     }
   });
+
+  function chooseStudent() {
+    jQuery("input[value=student]").click();
+  }
 
   var GPARules = {
     // GPA计算规则
@@ -45,7 +53,7 @@ jQuery.noConflict();
       "D": 1.0,
       "F": 0
     },
-    ResultToPoint: function(result) {
+    resultToPoint: function(result) {
       if (!isNaN(Number(result))) {
         result = Number(result);
         for (let i = 0; i < this.points.length; i++) {
@@ -59,7 +67,7 @@ jQuery.noConflict();
     }
   };
 
-  function ChengjiChaxunPage() {
+  function chengjiChaxunPage() {
     // 修改个人成绩查询页面
     var ChengjiTable = jQuery("table.xmu_table_class:eq(0)");
     ChengjiTable.find("tr:eq(0)").after('<tr><th colspan="8" style="text-align: left;"></th></td></tr>');
@@ -74,22 +82,22 @@ jQuery.noConflict();
     ChengjiTable.find("tr").find("td:eq(0)[width^=260]").siblings().addClass("select_this");
     ChengjiTable.find("tr").find("td:eq(0)[width^=260]").before('<td width="20px"><input type="checkbox" name="zxkcbox"></td>');
     jQuery("table.xmu_table_class:eq(0) tr:gt(1):has(th) th").addClass("select_term");
-    jQuery(".select_term").click(SelectThisTerm);
-    jQuery(".invert_check").click(InvertSelect);
-    jQuery(".all_check").click(CheckAllorCheckNo);
-    jQuery(".calc_gpa").click(CalcGPA);
+    jQuery(".select_term").click(selectThisTerm);
+    jQuery(".invert_check").click(invertSelect);
+    jQuery(".all_check").click(checkAllorNone);
+    jQuery(".calc_gpa").click(calcGPA);
     jQuery(".show_gpa_rules").click(showGPARules);
-    jQuery(".except_xiaoxuan").click(ExceptXiaoxuan);
-    jQuery(".select_this").click(SelectThisCourse);
-    jQuery(".stat_credits").click(StatCredit);
+    jQuery(".except_xiaoxuan").click(exceptXiaoxuan);
+    jQuery(".select_this").click(selectThisCourse);
+    jQuery(".stat_credits").click(statCredit);
   }
 
-  function JiaoxuePingcePage() {
+  function jiaoxuePingcePage() {
     // 教学评估页面的修改
     // 主要改动：修复页面兼容性（显示菜单栏、题目等）、添加自动完成测评功能
     if (jQuery("body").has("form#frm").length !== 0) {
       jQuery(document.createElement('script')).attr("src", "http://ogf9rwckw.bkt.clouddn.com/xmu/ssfw/jxpg-run.js").appendTo("body");
-      ShowMenu();
+      showMenu();
       jQuery("script[src$=jquery\\.min\\.js]").remove();
       jQuery("script[src$=jquery-1\\.8\\.2\\.min\\.js]").remove();
       jQuery("script[src$=jxpg\\.js]").attr("src", "http://ogf9rwckw.bkt.clouddn.com/xmu/ssfw/jxpg-run.js");
@@ -99,8 +107,8 @@ jQuery.noConflict();
           jQuery(this).before('<a class = "ui_btn auto_jxpg_all">自动完成全部</a>');
         }
       });
-      jQuery(".auto_jxpg_all").click(AutoJxpg);
-      jQuery(".auto_jxpg_this").click(AutoJxpg);
+      jQuery(".auto_jxpg_all").click(autoJxpg);
+      jQuery(".auto_jxpg_this").click(autoJxpg);
     }
   }
 
@@ -127,7 +135,7 @@ jQuery.noConflict();
     win.show();
   }
 
-  function ShowMenu() {
+  function showMenu() {
     // 实现显示菜单栏等功能，直接从网页底端复制过来的
     jQuery("#topnav>div.current").next("ul").show().siblings("ul").hide();
     jQuery("#topnav>div").click(function() {
@@ -144,7 +152,7 @@ jQuery.noConflict();
     });
   }
 
-  function AutoJxpg() {
+  function autoJxpg() {
     // 实现自动完成教学测评功能
     // 修改自：https://github.com/hatsuame/xmu-reformer/blob/master/evaluate.js
     (function fn(window, ko, $, autobutton) {
@@ -177,7 +185,7 @@ jQuery.noConflict();
     })(window, ko, jQuery, this);
   }
 
-  function CheckAllorCheckNo() {
+  function checkAllorNone() {
     // 实现全选/全不选
     var courses = jQuery('input:checkbox[name=zxkcbox]');
     var flag = false;
@@ -192,7 +200,7 @@ jQuery.noConflict();
     });
   }
 
-  function ExceptXiaoxuan() {
+  function exceptXiaoxuan() {
     // 选择除了校选外的课程
     jQuery('input:checkbox[name=zxkcbox]').each(function() {
       var tablerow = jQuery(this).parent("td").parent("tr").children("td");
@@ -206,7 +214,7 @@ jQuery.noConflict();
     });
   }
 
-  function SelectThisCourse() {
+  function selectThisCourse() {
     // 选择所点击的课程
     var cb = jQuery(this).parent("tr").children("td:eq(0)").children("input:checkbox[name=zxkcbox]");
     if (cb.is(':checked')) {
@@ -216,7 +224,7 @@ jQuery.noConflict();
     }
   }
 
-  function SelectThisTerm() {
+  function selectThisTerm() {
     // 选择所点击的学期内的所有课程
     var term = jQuery(this).parent("tr");
     var term_courses = term.nextUntil("tr:has(th)").find("td:eq(0)").children("input:checkbox[name=zxkcbox]");
@@ -232,7 +240,7 @@ jQuery.noConflict();
     });
   }
 
-  function InvertSelect() {
+  function invertSelect() {
     // 实现反选
     jQuery('input:checkbox[name=zxkcbox]').each(function() {
       if (jQuery(this).is(':checked')) {
@@ -243,7 +251,7 @@ jQuery.noConflict();
     });
   }
 
-  function StatCredit() {
+  function statCredit() {
     // 学分统计功能
     var courses = {};
     var credit_kcxz = {
@@ -296,7 +304,7 @@ jQuery.noConflict();
     showResultWin(tabNode[0].outerHTML, "学分统计信息", 300, 600);
   }
 
-  function CalcGPA() {
+  function calcGPA() {
     // 计算GPA功能
     var selected_courses = [];
     jQuery('input:checkbox[name=zxkcbox]:checked').each(function() {
@@ -310,7 +318,7 @@ jQuery.noConflict();
     });
     if (selected_courses.length !== 0) {
       var points = getPoints(selected_courses);
-      var calc_result = Points2GPA(points);
+      var calc_result = points2GPA(points);
       calc_result.push(getAverage(selected_courses));
       var result_item = ["GPA", "总绩点", "总学分", "平均分"];
 
@@ -322,7 +330,7 @@ jQuery.noConflict();
         let tdNode = trNode.insertCell();
         tdNode.align = "center";
         tdNode.innerHTML = calc_result[i];
-      };
+      }
 
       var trNode = tabNode[0].insertRow();
       trNode.innerHTML = '<th width="100px">说明：</th>';
@@ -359,7 +367,7 @@ jQuery.noConflict();
       if (result === "" || result === "合格") {
         continue;
       }
-      var point = GPARules.ResultToPoint(result);
+      var point = GPARules.resultToPoint(result);
       courses.push({
         "credit": credit,
         "point": point,
@@ -368,7 +376,7 @@ jQuery.noConflict();
     return courses;
   }
 
-  function Points2GPA(courses) {
+  function points2GPA(courses) {
     // 课程绩点平均（转GPA）
     var total_credit = 0;
     var total_gradepoint = 0;
