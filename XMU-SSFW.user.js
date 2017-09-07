@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         XMU-SSFW
 // @namespace    undefined
-// @version      0.3.0
+// @version      0.3.1
 // @description  厦门大学教务系统改造脚本
 // @author       linjinzhen
 // @match        http://ssfw.xmu.edu.cn/*
@@ -48,7 +48,7 @@ jQuery.noConflict();
     ResultToPoint: function(result) {
       if (!isNaN(Number(result))) {
         result = Number(result);
-        for (var i = 0; i < this.points.length; i++) {
+        for (let i = 0; i < this.points.length; i++) {
           if (result <= this.scores_max[i] && result >= this.scores_min[i]) {
             return this.points[i];
           }
@@ -94,7 +94,7 @@ jQuery.noConflict();
       jQuery("script[src$=jquery-1\\.8\\.2\\.min\\.js]").remove();
       jQuery("script[src$=jxpg\\.js]").attr("src", "http://ogf9rwckw.bkt.clouddn.com/xmu/ssfw/jxpg-run.js");
       jQuery(".ui_btn").each(function() {
-        if (jQuery(this).text() == "返回") {
+        if (jQuery(this).text() === "返回") {
           jQuery(this).before('<a class = "ui_btn auto_jxpg_this">自动完成该题</a>');
           jQuery(this).before('<a class = "ui_btn auto_jxpg_all">自动完成全部</a>');
         }
@@ -198,7 +198,7 @@ jQuery.noConflict();
       var tablerow = jQuery(this).parent("td").parent("tr").children("td");
       var kclb = tablerow.eq(3).children("font").text();
       var xdxz = tablerow.eq(4).children("font").text();
-      if (kclb == "通识教育" && xdxz == "选修") {
+      if (kclb === "通识教育" && xdxz === "选修") {
         jQuery(this).prop("checked", false);
       } else {
         jQuery(this).prop("checked", true);
@@ -261,9 +261,9 @@ jQuery.noConflict();
       "必修": "bixiu",
       "选修": "xuanxiu"
     };
-    for (var i in kclbs) {
+    for (let i in kclbs) {
       courses[kclbs[i]] = {};
-      for (var j in kcxzs) {
+      for (let j in kcxzs) {
         courses[kclbs[i]][kcxzs[j]] = 0;
       }
     }
@@ -279,13 +279,13 @@ jQuery.noConflict();
     // 构建统计结果表格
     var tabNode = jQuery('<table class="xmu_table_class" width="100%"><tbody></tbody></table>');
     tabNode.append(jQuery('<tr><th>课程类别</th><th>所选课程必修学分</th><th>所选课程选修学分</th></tr>'));
-    for (var i in kclbs) {
-      var trNode = tabNode[0].insertRow();
-      var results = courses[kclbs[i]];
+    for (let i in kclbs) {
+      let trNode = tabNode[0].insertRow();
+      let results = courses[kclbs[i]];
       trNode.className = kclbs[i];
       trNode.insertCell().innerHTML = i;
-      for (var j in results) {
-        var tdNode = trNode.insertCell();
+      for (let j in results) {
+        let tdNode = trNode.insertCell();
         tdNode.className = j;
         tdNode.innerHTML = results[j];
       }
@@ -316,10 +316,10 @@ jQuery.noConflict();
 
       // 构建计算结果表格
       var tabNode = jQuery('<table class="xmu_table_class" width="100%"><tbody></tbody></table>');
-      for (var i = 0; i < calc_result.length; i++) {
-        var trNode = tabNode[0].insertRow();
+      for (let i = 0; i < calc_result.length; i++) {
+        let trNode = tabNode[0].insertRow();
         trNode.innerHTML = '<th width="100px">' + result_item[i] + '</th>';
-        var tdNode = trNode.insertCell();
+        let tdNode = trNode.insertCell();
         tdNode.align = "center";
         tdNode.innerHTML = calc_result[i];
       };
@@ -340,8 +340,8 @@ jQuery.noConflict();
     var grades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F"];
     var tabNode = jQuery('<table class="xmu_table_class" width="100%"><tbody></tbody></table>');
     tabNode.append(jQuery('<tr><th>百分制</th><th>等级制</th><th>绩点</th></tr>'));
-    for (var i = 0; i < GPARules.points.length; i++) {
-      var trNode = tabNode[0].insertRow();
+    for (let i = 0; i < GPARules.points.length; i++) {
+      let trNode = tabNode[0].insertRow();
       trNode.insertCell().innerHTML = GPARules.scores_min[i] + "-" + GPARules.scores_max[i];
       trNode.insertCell().innerHTML = grades[i];
       trNode.insertCell().innerHTML = GPARules.points[i].toFixed(1);
@@ -352,11 +352,11 @@ jQuery.noConflict();
   function getPoints(data) {
     // 获取课程绩点
     var courses = [];
-    for (var i = 0; i < data.length; i++) {
-      var credit = data[i].credit;
-      var result = data[i].result;
+    for (let i = 0; i < data.length; i++) {
+      let credit = data[i].credit;
+      let result = data[i].result;
       credit = Number(credit);
-      if (result === "" || result == "合格") {
+      if (result === "" || result === "合格") {
         continue;
       }
       var point = GPARules.ResultToPoint(result);
@@ -372,8 +372,8 @@ jQuery.noConflict();
     // 课程绩点平均（转GPA）
     var total_credit = 0;
     var total_gradepoint = 0;
-    for (var i = 0; i < courses.length; i++) {
-      var course = courses[i];
+    for (let i = 0; i < courses.length; i++) {
+      let course = courses[i];
       total_gradepoint += course.credit * course.point;
       total_credit += course.credit;
     }
@@ -386,11 +386,11 @@ jQuery.noConflict();
     //计算平均分
     var total_credit = 0;
     var total_score = 0;
-    for (var i = 0; i < courses.length; i++) {
-      var course = courses[i];
-      if (!isNaN(Number(course.result)) && course.result != "") {
-        var score = Number(course.result);
-        var credit = Number(course.credit);
+    for (let i = 0; i < courses.length; i++) {
+      let course = courses[i];
+      if (!isNaN(Number(course.result)) && course.result !== "") {
+        let score = Number(course.result);
+        let credit = Number(course.credit);
         total_score += credit * score;
         total_credit += credit;
       }
