@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         XMU-SSFW
 // @namespace    undefined
-// @version      0.3.1
+// @version      0.3.2
 // @description  厦门大学教务系统改造脚本
 // @author       linjinzhen
 // @match        http://ssfw.xmu.edu.cn/*
@@ -96,11 +96,11 @@ jQuery.noConflict();
     // 教学评估页面的修改
     // 主要改动：修复页面兼容性（显示菜单栏、题目等）、添加自动完成测评功能
     if (jQuery("body").has("form#frm").length !== 0) {
-      jQuery(document.createElement('script')).attr("src", "http://ogf9rwckw.bkt.clouddn.com/xmu/ssfw/jxpg-run.js").appendTo("body");
+      jQuery(document.createElement('script')).attr("src", "https://gitee.com/linjinzhen/xmu-ssfw/raw/master/js/jxpg.js").appendTo("body");
       showMenu();
       jQuery("script[src$=jquery\\.min\\.js]").remove();
       jQuery("script[src$=jquery-1\\.8\\.2\\.min\\.js]").remove();
-      jQuery("script[src$=jxpg\\.js]").attr("src", "http://ogf9rwckw.bkt.clouddn.com/xmu/ssfw/jxpg-run.js");
+      jQuery("script[src$=jxpg\\.js]").attr("src", "https://gitee.com/linjinzhen/xmu-ssfw/raw/master/js/jxpg.js");
       jQuery(".ui_btn").each(function() {
         if (jQuery(this).text() === "返回") {
           jQuery(this).before('<a class = "ui_btn auto_jxpg_this">自动完成该题</a>');
