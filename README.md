@@ -14,4 +14,4 @@
 ## 使用方法
 需要在浏览器上安装插件，推荐使用[Tampermonkey](http://tampermonkey.net/)，支持Chrome, Microsoft Edge, Safari, Opera Next, Firefox 以及各种国产的基于chrome内核的浏览器。
 
-安装插件后到[GreasyFork](https://greasyfork.org/zh-CN/scripts/32320-xmu-ssfw)安装脚本即可。
+安装插件后到[GreasyFork](https://greasyfork.org/zh-CN/scripts/33033-xmu-ssfw)安装脚本即可。
