@@ -5,6 +5,7 @@
 // @description  厦门大学教务系统改造脚本
 // @author       linjinzhen
 // @match        http://ssfw.xmu.edu.cn/*
+// @match        https://ssfw.xmu.edu.cn/*
 // @grant        none
 // @run-at       document-body
 // @require      http://libs.baidu.com/jquery/1.9.1/jquery.min.js
